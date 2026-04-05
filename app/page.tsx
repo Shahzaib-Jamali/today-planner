@@ -39,54 +39,59 @@ export default function HomePage() {
   const { tasks, notes, timeBlocks, readings, toggleTask, toggleReadingStatus } = usePlanner();
   const today = todayStr();
   const weekDates = getWeekDates();
+  const [selectedDate, setSelectedDate] = useState(today);
 
-  const dayTasks = tasks.filter((t) => t.date === today);
-  const dayNotes = notes.filter((n) => n.date === today);
-  const dayReadings = readings.filter((r) => r.date === today);
+  const dayTasks = tasks.filter((t) => t.date === selectedDate);
+  const dayNotes = notes.filter((n) => n.date === selectedDate);
+  const dayReadings = readings.filter((r) => r.date === selectedDate);
   const dayBlocks = timeBlocks
-    .filter((b) => b.date === today)
+    .filter((b) => b.date === selectedDate)
     .sort((a, b) => a.time.localeCompare(b.time));
 
   const doneTasks = dayTasks.filter((t) => t.done).length;
   const nextBlock = dayBlocks[0];
+  const isToday = selectedDate === today;
 
   return (
     <div className="flex flex-col">
       {/* DAY BAR */}
       <div className="flex" style={{ borderBottom: "2px solid var(--border-heavy)" }}>
         {weekDates.map((date) => {
-          const isToday = date === today;
+          const isSelected = date === selectedDate;
+          const isActualToday = date === today;
           const dayTasks2 = tasks.filter((t) => t.date === date);
           return (
-            <Link
+            <button
               key={date}
-              href={`/day/${date}`}
-              className="flex-1 py-1.5 text-center transition-all"
+              onClick={() => setSelectedDate(date)}
+              className="flex-1 py-1.5 text-center transition-all cursor-pointer"
               style={{
-                background: isToday ? "var(--blue)" : "transparent",
+                background: isSelected ? "var(--blue)" : "transparent",
                 borderRight: "1px solid var(--border)",
+                border: "none",
+                borderBottom: isActualToday && !isSelected ? "2px solid var(--red)" : "none",
               }}
             >
               <div
                 className="text-[9px] font-semibold uppercase tracking-[1px]"
-                style={{ color: isToday ? "rgba(255,255,255,0.5)" : "var(--faint)" }}
+                style={{ color: isSelected ? "rgba(255,255,255,0.5)" : isActualToday ? "var(--red)" : "var(--faint)" }}
               >
                 {formatDayShort(date)}
               </div>
               <div
                 className="text-lg font-bold leading-tight"
-                style={{ color: isToday ? "#fff" : "#ccc" }}
+                style={{ color: isSelected ? "#fff" : isActualToday ? "var(--text)" : "#ccc" }}
               >
                 {formatDayNum(date)}
               </div>
-              {dayTasks2.length > 0 && !isToday && (
+              {dayTasks2.length > 0 && !isSelected && (
                 <div className="flex gap-[2px] justify-center mt-0.5">
                   {dayTasks2.slice(0, 3).map((_, i) => (
-                    <span key={i} className="w-1 h-1 rounded-full" style={{ background: "var(--blue)" }} />
+                    <span key={i} className="w-1 h-1 rounded-full" style={{ background: isActualToday ? "var(--red)" : "var(--blue)" }} />
                   ))}
                 </div>
               )}
-            </Link>
+            </button>
           );
         })}
       </div>
@@ -130,7 +135,7 @@ export default function HomePage() {
         style={{ borderBottom: "2px solid var(--border-heavy)" }}
       >
         <h1 className="text-sm font-bold tracking-[2px]" style={{ color: "var(--blue)" }}>
-          {formatDateLong(today)}
+          {formatDateLong(selectedDate)}
         </h1>
         <div className="flex items-center gap-2">
           <div className="w-[100px] h-[3px]" style={{ background: "var(--border)" }}>
@@ -288,19 +293,19 @@ export default function HomePage() {
       </div>
 
       {/* QUICK ADD */}
-      <QuickAdd />
+      <QuickAdd selectedDate={selectedDate} />
     </div>
   );
 }
 
-function QuickAdd() {
+function QuickAdd({ selectedDate }: { selectedDate: string }) {
   const { addTask } = usePlanner();
   const [value, setValue] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!value.trim()) return;
-    addTask(todayStr(), value.trim());
+    addTask(selectedDate, value.trim());
     setValue("");
   }
 
