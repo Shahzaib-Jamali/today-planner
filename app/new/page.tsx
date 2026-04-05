@@ -1,18 +1,32 @@
 "use client";
 
 import { usePlanner } from "@/context/PlannerContext";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
 
 function todayStr() {
   return new Date().toISOString().split("T")[0];
 }
 
 export default function NewPage() {
+  return (
+    <Suspense>
+      <NewPageContent />
+    </Suspense>
+  );
+}
+
+function NewPageContent() {
   const { addTask, addNote, addTimeBlock, addReading, addVocab } = usePlanner();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialType = searchParams.get("type");
+  const validTypes = ["task", "note", "timeblock", "reading", "vocab"] as const;
+  type EntryType = typeof validTypes[number];
 
-  const [type, setType] = useState<"task" | "note" | "timeblock" | "reading" | "vocab">("task");
+  const [type, setType] = useState<EntryType>(
+    validTypes.includes(initialType as EntryType) ? (initialType as EntryType) : "task"
+  );
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(todayStr());
   const [time, setTime] = useState("09:00");

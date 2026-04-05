@@ -71,7 +71,7 @@ export default function StudyPage() {
         </div>
         <div className="flex items-center gap-3">
           <Link
-            href="/new"
+            href="/new?type=vocab"
             className="text-[11px] font-bold uppercase tracking-[1px] px-3 py-1.5"
             style={{ background: "var(--red)", color: "#fff" }}
           >
