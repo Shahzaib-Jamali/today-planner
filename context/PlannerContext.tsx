@@ -73,38 +73,41 @@ function todayStr() {
   return new Date().toISOString().split("T")[0];
 }
 
+// Compute once at module load to prevent HMR re-evaluation triggering re-renders
+const TODAY = todayStr();
+
 const sampleTasks: Task[] = [
-  { id: "t1", date: todayStr(), title: "Review lecture notes", done: false, course: "DBS", dueDate: "TODAY" },
-  { id: "t2", date: todayStr(), title: "Push assignment to GitHub", done: true, course: "DBS" },
-  { id: "t3", date: todayStr(), title: "Grab coffee with Alex", done: false },
-  { id: "t4", date: todayStr(), title: "Read DDIA Ch. 5", done: false, course: "Cloud", dueDate: "TUE" },
-  { id: "t5", date: todayStr(), title: "Submit reflections", done: false, course: "DBS", dueDate: "WED" },
+  { id: "t1", date: TODAY, title: "Review lecture notes", done: false, course: "DBS", dueDate: "TODAY" },
+  { id: "t2", date: TODAY, title: "Push assignment to GitHub", done: true, course: "DBS" },
+  { id: "t3", date: TODAY, title: "Grab coffee with Alex", done: false },
+  { id: "t4", date: TODAY, title: "Read DDIA Ch. 5", done: false, course: "Cloud", dueDate: "TUE" },
+  { id: "t5", date: TODAY, title: "Submit reflections", done: false, course: "DBS", dueDate: "WED" },
 ];
 
 const sampleNotes: Note[] = [
-  { id: "n1", date: todayStr(), text: "Exam covers ch 3-7. Study group Sunday 4pm at Reg." },
+  { id: "n1", date: TODAY, text: "Exam covers ch 3-7. Study group Sunday 4pm at Reg." },
 ];
 
 const sampleTimeBlocks: TimeBlock[] = [
-  { id: "b1", date: todayStr(), time: "09:00", title: "Algorithms Lecture", location: "JCL 298" },
-  { id: "b2", date: todayStr(), time: "11:00", title: "Deep work — PS4" },
-  { id: "b3", date: todayStr(), time: "14:00", title: "Office Hours", location: "JCL 379" },
-  { id: "b4", date: todayStr(), time: "16:00", title: "Gym", location: "Ratner" },
+  { id: "b1", date: TODAY, time: "09:00", title: "Algorithms Lecture", location: "JCL 298" },
+  { id: "b2", date: TODAY, time: "11:00", title: "Deep work — PS4" },
+  { id: "b3", date: TODAY, time: "14:00", title: "Office Hours", location: "JCL 379" },
+  { id: "b4", date: TODAY, time: "16:00", title: "Gym", location: "Ratner" },
 ];
 
 const sampleReadings: Reading[] = [
-  { id: "r1", date: todayStr(), title: "DDIA Ch. 5 — Replication", url: "#", source: "Textbook", course: "Cloud", status: "TODO" },
-  { id: "r2", date: todayStr(), title: "Tailwind Responsive Design", url: "#", source: "Docs", course: "DBS", status: "DONE" },
-  { id: "r3", date: todayStr(), title: "React Server Components RFC", url: "#", source: "RFC", course: "Web Dev", status: "TODO" },
+  { id: "r1", date: TODAY, title: "DDIA Ch. 5 — Replication", url: "#", source: "Textbook", course: "Cloud", status: "TODO" },
+  { id: "r2", date: TODAY, title: "Tailwind Responsive Design", url: "#", source: "Docs", course: "DBS", status: "DONE" },
+  { id: "r3", date: TODAY, title: "React Server Components RFC", url: "#", source: "RFC", course: "Web Dev", status: "TODO" },
 ];
 
 const sampleVocab: VocabWord[] = [
-  { id: "v1", word: "Idempotent", definition: "An operation that produces the same result whether executed once or multiple times.", example: "PUT requests are idempotent — sending the same update twice has the same effect as sending it once.", course: "Cloud", mastery: "learning", dateAdded: todayStr() },
-  { id: "v2", word: "Denormalization", definition: "The process of adding redundant data to a database to improve read performance.", example: "We denormalized the user table by storing the city name directly instead of joining with the cities table.", course: "Cloud", mastery: "new", dateAdded: todayStr() },
-  { id: "v3", word: "Middleware", definition: "Software that acts as a bridge between an operating system or database and applications.", example: "The auth middleware checks the JWT token before the request reaches the route handler.", course: "Web Dev", mastery: "mastered", dateAdded: todayStr() },
-  { id: "v4", word: "Tailwind", definition: "A utility-first CSS framework that provides low-level utility classes to build custom designs.", example: "Instead of writing custom CSS, we used Tailwind classes like px-4 and text-sm directly in the markup.", course: "DBS", mastery: "learning", dateAdded: todayStr() },
-  { id: "v5", word: "Quorum", definition: "The minimum number of nodes that must agree for a distributed operation to be considered successful.", example: "With a replication factor of 3 and a write quorum of 2, at least 2 replicas must confirm the write.", course: "Cloud", mastery: "new", dateAdded: todayStr() },
-  { id: "v6", word: "Hydration", definition: "The process of attaching JavaScript event handlers to server-rendered HTML on the client side.", example: "After the server sends the initial HTML, React hydrates the page to make it interactive.", course: "Web Dev", mastery: "new", dateAdded: todayStr() },
+  { id: "v1", word: "Idempotent", definition: "An operation that produces the same result whether executed once or multiple times.", example: "PUT requests are idempotent — sending the same update twice has the same effect as sending it once.", course: "Cloud", mastery: "learning", dateAdded: TODAY },
+  { id: "v2", word: "Denormalization", definition: "The process of adding redundant data to a database to improve read performance.", example: "We denormalized the user table by storing the city name directly instead of joining with the cities table.", course: "Cloud", mastery: "new", dateAdded: TODAY },
+  { id: "v3", word: "Middleware", definition: "Software that acts as a bridge between an operating system or database and applications.", example: "The auth middleware checks the JWT token before the request reaches the route handler.", course: "Web Dev", mastery: "mastered", dateAdded: TODAY },
+  { id: "v4", word: "Tailwind", definition: "A utility-first CSS framework that provides low-level utility classes to build custom designs.", example: "Instead of writing custom CSS, we used Tailwind classes like px-4 and text-sm directly in the markup.", course: "DBS", mastery: "learning", dateAdded: TODAY },
+  { id: "v5", word: "Quorum", definition: "The minimum number of nodes that must agree for a distributed operation to be considered successful.", example: "With a replication factor of 3 and a write quorum of 2, at least 2 replicas must confirm the write.", course: "Cloud", mastery: "new", dateAdded: TODAY },
+  { id: "v6", word: "Hydration", definition: "The process of attaching JavaScript event handlers to server-rendered HTML on the client side.", example: "After the server sends the initial HTML, React hydrates the page to make it interactive.", course: "Web Dev", mastery: "new", dateAdded: TODAY },
 ];
 
 export function PlannerProvider({ children }: { children: ReactNode }) {
