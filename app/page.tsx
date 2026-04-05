@@ -36,7 +36,7 @@ function formatDateLong(dateStr: string) {
 }
 
 export default function HomePage() {
-  const { tasks, notes, timeBlocks, readings, toggleTask, toggleReadingStatus } = usePlanner();
+  const { tasks, notes, timeBlocks, readings, vocab, toggleTask, toggleReadingStatus } = usePlanner();
   const today = todayStr();
   const weekDates = getWeekDates();
   const [selectedDate, setSelectedDate] = useState(today);
@@ -291,6 +291,30 @@ export default function HomePage() {
           )}
         </div>
       </div>
+
+      {/* VOCAB STRIP */}
+      {vocab.length > 0 && (
+        <Link
+          href="/study"
+          className="flex items-center gap-3 px-4 py-2"
+          style={{ borderBottom: "2px solid var(--border-heavy)", background: "var(--subtle)" }}
+        >
+          <span className="text-[10px] font-semibold uppercase tracking-[2px]" style={{ color: "var(--blue)" }}>Vocab</span>
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--red)" }} />
+            <span className="text-[10px]" style={{ color: "var(--muted)" }}>{vocab.filter(v => v.mastery === "new").length} new</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--blue)" }} />
+            <span className="text-[10px]" style={{ color: "var(--muted)" }}>{vocab.filter(v => v.mastery === "learning").length} learning</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full" style={{ background: "var(--yellow-dark)" }} />
+            <span className="text-[10px]" style={{ color: "var(--muted)" }}>{vocab.filter(v => v.mastery === "mastered").length} mastered</span>
+          </div>
+          <span className="ml-auto text-[10px] font-semibold" style={{ color: "var(--blue)" }}>Study →</span>
+        </Link>
+      )}
 
       {/* QUICK ADD */}
       <QuickAdd selectedDate={selectedDate} />

@@ -46,6 +46,16 @@ export default function Nav() {
           Week
         </Link>
         <Link
+          href="/study"
+          className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[1px] transition-all"
+          style={{
+            color: pathname === "/study" ? "var(--text)" : "var(--muted)",
+            border: `1.5px solid ${pathname === "/study" ? "var(--text)" : "var(--border)"}`,
+          }}
+        >
+          Study
+        </Link>
+        <Link
           href="/new"
           className="px-3 py-1.5 text-[11px] font-bold uppercase tracking-[1px] transition-all"
           style={{ background: "var(--red)", color: "#fff", border: "1.5px solid var(--red)" }}

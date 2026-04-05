@@ -9,15 +9,17 @@ function todayStr() {
 }
 
 export default function NewPage() {
-  const { addTask, addNote, addTimeBlock, addReading } = usePlanner();
+  const { addTask, addNote, addTimeBlock, addReading, addVocab } = usePlanner();
   const router = useRouter();
 
-  const [type, setType] = useState<"task" | "note" | "timeblock" | "reading">("task");
+  const [type, setType] = useState<"task" | "note" | "timeblock" | "reading" | "vocab">("task");
   const [title, setTitle] = useState("");
   const [date, setDate] = useState(todayStr());
   const [time, setTime] = useState("09:00");
   const [course, setCourse] = useState("");
   const [location, setLocation] = useState("");
+  const [definition, setDefinition] = useState("");
+  const [example, setExample] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,17 +33,20 @@ export default function NewPage() {
       addTimeBlock(date, time, title.trim(), location || undefined);
     } else if (type === "reading") {
       addReading(date, title.trim(), "#", course || "Docs", course || undefined);
+    } else if (type === "vocab") {
+      addVocab(title.trim(), definition.trim(), example.trim() || undefined, course || undefined);
     }
 
-    router.push("/");
+    router.push(type === "vocab" ? "/study" : "/");
   };
 
-  const types = ["task", "note", "timeblock", "reading"] as const;
+  const types = ["task", "note", "timeblock", "reading", "vocab"] as const;
   const typeColors: Record<string, string> = {
     task: "var(--blue)",
     note: "var(--yellow-dark)",
     timeblock: "var(--red)",
     reading: "var(--text)",
+    vocab: "var(--blue)",
   };
 
   return (
@@ -100,8 +105,8 @@ export default function NewPage() {
           </div>
         )}
 
-        {/* Course (for task, reading) */}
-        {(type === "task" || type === "reading") && (
+        {/* Course (for task, reading, vocab) */}
+        {(type === "task" || type === "reading" || type === "vocab") && (
           <div>
             <label className="text-[10px] font-semibold uppercase tracking-[2px] block mb-2" style={{ color: "var(--muted)" }}>Course (optional)</label>
             <input
@@ -133,7 +138,7 @@ export default function NewPage() {
         {/* Title / Text */}
         <div>
           <label className="text-[10px] font-semibold uppercase tracking-[2px] block mb-2" style={{ color: "var(--muted)" }}>
-            {type === "note" ? "Note" : "Title"}
+            {type === "note" ? "Note" : type === "vocab" ? "Word" : "Title"}
           </label>
           {type === "note" ? (
             <textarea
@@ -150,13 +155,41 @@ export default function NewPage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder={
-                type === "task" ? "What needs to be done?" : type === "reading" ? "Article or chapter title" : "What's happening?"
+                type === "task" ? "What needs to be done?" : type === "reading" ? "Article or chapter title" : type === "vocab" ? "e.g. Idempotent" : "What's happening?"
               }
               className="w-full px-3 py-2.5 text-sm outline-none transition-colors"
               style={{ background: "var(--surface)", border: "1.5px solid var(--border)", color: "var(--text)" }}
             />
           )}
         </div>
+
+        {/* Vocab: Definition + Example */}
+        {type === "vocab" && (
+          <>
+            <div>
+              <label className="text-[10px] font-semibold uppercase tracking-[2px] block mb-2" style={{ color: "var(--muted)" }}>Definition</label>
+              <textarea
+                value={definition}
+                onChange={(e) => setDefinition(e.target.value)}
+                placeholder="What does this word mean?"
+                rows={3}
+                className="w-full px-3 py-2.5 text-sm outline-none resize-none transition-colors"
+                style={{ background: "var(--surface)", border: "1.5px solid var(--border)", color: "var(--text)" }}
+              />
+            </div>
+            <div>
+              <label className="text-[10px] font-semibold uppercase tracking-[2px] block mb-2" style={{ color: "var(--muted)" }}>Example (optional)</label>
+              <input
+                type="text"
+                value={example}
+                onChange={(e) => setExample(e.target.value)}
+                placeholder="Use it in a sentence..."
+                className="w-full px-3 py-2.5 text-sm outline-none transition-colors"
+                style={{ background: "var(--surface)", border: "1.5px solid var(--border)", color: "var(--text)" }}
+              />
+            </div>
+          </>
+        )}
 
         {/* Submit */}
         <button
