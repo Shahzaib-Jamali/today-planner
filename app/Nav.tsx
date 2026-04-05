@@ -1,12 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSettings } from "@/context/SettingsContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Nav() {
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, setTheme } = useSettings();
+  const { user, logout } = useAuth();
+
+  function handleLogout() {
+    logout();
+    router.push("/login");
+  }
 
   return (
     <nav
@@ -70,6 +78,22 @@ export default function Nav() {
         >
           {theme === "light" ? "◐" : "◑"}
         </button>
+
+        {/* User + Logout */}
+        {user && (
+          <>
+            <span className="ml-2 text-[11px] font-semibold" style={{ color: "var(--muted)" }}>
+              {user}
+            </span>
+            <button
+              onClick={handleLogout}
+              className="ml-1 px-2 py-1.5 text-[10px] font-semibold uppercase tracking-[1px] cursor-pointer transition-all"
+              style={{ color: "var(--red)", border: "1.5px solid var(--red)" }}
+            >
+              Out
+            </button>
+          </>
+        )}
       </div>
     </nav>
   );

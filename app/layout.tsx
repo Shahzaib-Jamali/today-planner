@@ -3,8 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { PlannerProvider } from "@/context/PlannerContext";
 import { SettingsProvider } from "@/context/SettingsContext";
-import Nav from "./Nav";
-import ThemeWrapper from "./ThemeWrapper";
+import { AuthProvider } from "@/context/AuthContext";
+import AppShell from "./AppShell";
 
 const inter = Inter({
   variable: "--font-geist-sans",
@@ -24,16 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-[family-name:var(--font-geist-sans)]">
-        <SettingsProvider>
-          <ThemeWrapper>
-            <PlannerProvider>
-              <Nav />
-              <main className="flex-1">
-                {children}
-              </main>
-            </PlannerProvider>
-          </ThemeWrapper>
-        </SettingsProvider>
+        <AuthProvider>
+          <SettingsProvider>
+            <AppShell>{children}</AppShell>
+          </SettingsProvider>
+        </AuthProvider>
       </body>
     </html>
   );
