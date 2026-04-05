@@ -28,15 +28,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-  }, [theme]);
-
-  useEffect(() => {
     document.documentElement.style.fontSize = fontSizeMap[fontSize];
   }, [fontSize]);
 
