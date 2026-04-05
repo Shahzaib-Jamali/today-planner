@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #faf8f4;
+  --surface: #ffffff;
+  --border: #e0dcc8;
+  --border-heavy: #1a1a1a;
+  --text: #1a1a1a;
+  --muted: #999999;
+  --faint: #bbbbbb;
+  --subtle: #f0ede4;
+  --blue: #1D3557;
+  --red: #E63946;
+  --yellow: #F4D35E;
+  --yellow-dark: #a6920e;
+  --yellow-bg: #fdf8e8;
+
+  --nav-bg: #faf8f4;
+  --nav-border: #1a1a1a;
+  --card-bg: #ffffff;
+  --card-border: #e0dcc8;
+  --input-bg: #ffffff;
+  --input-border: #e0dcc8;
+  --accent: #E63946;
+  --foreground: #1a1a1a;
+  --background: #faf8f4;
+  --hover-bg: #f0ede4;
+  --btn-bg: #E63946;
+  --btn-text: #ffffff;
+  --footer-border: #e0dcc8;
+  --checkbox-accent: #1D3557;
+}
+
+:root.dark, .dark {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --border: #222222;
+  --border-heavy: #333333;
+  --text: #faf8f4;
+  --muted: #777777;
+  --faint: #555555;
+  --subtle: #1a1a1a;
+  --blue: #4a7fb5;
+  --red: #ff6b6b;
+  --yellow: #F4D35E;
+  --yellow-dark: #d4b30a;
+  --yellow-bg: #1a1800;
+
+  --nav-bg: #0a0a0a;
+  --nav-border: #333333;
+  --card-bg: #111111;
+  --card-border: #222222;
+  --input-bg: #1a1a1a;
+  --input-border: #333333;
+  --accent: #ff6b6b;
+  --foreground: #faf8f4;
+  --background: #0a0a0a;
+  --hover-bg: #1a1a1a;
+  --btn-bg: #ff6b6b;
+  --btn-text: #ffffff;
+  --footer-border: #222222;
+  --checkbox-accent: #4a7fb5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+::selection {
+  background: var(--blue);
+  color: #fff;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--checkbox-accent);
+}
