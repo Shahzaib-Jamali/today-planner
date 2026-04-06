@@ -4,6 +4,7 @@ import { usePlanner } from "@/context/PlannerContext";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { parseNaturalInput } from "@/lib/parseNaturalInput";
+import { getQuoteOfTheDay } from "@/lib/quotes";
 
 function todayStr() {
   return new Date().toISOString().split("T")[0];
@@ -351,6 +352,26 @@ export default function HomePage() {
 
       {/* QUICK ADD */}
       <QuickAdd selectedDate={selectedDate} />
+
+      {/* QUOTE OF THE DAY */}
+      <QuoteOfTheDay />
+    </div>
+  );
+}
+
+function QuoteOfTheDay() {
+  const quote = getQuoteOfTheDay();
+  return (
+    <div
+      className="px-4 py-2.5 text-center"
+      style={{ background: "var(--subtle)", borderTop: "1px solid var(--border)" }}
+    >
+      <p className="text-[11px] italic leading-relaxed" style={{ color: "var(--muted)" }}>
+        &ldquo;{quote.text}&rdquo;
+      </p>
+      <p className="text-[9px] mt-1 uppercase tracking-[2px]" style={{ color: "var(--faint)" }}>
+        — {quote.author}
+      </p>
     </div>
   );
 }
