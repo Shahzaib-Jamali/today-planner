@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# brand guidelines (local only)
+/brand
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
