@@ -74,9 +74,7 @@ function generateId() {
   return Math.random().toString(36).slice(2, 9);
 }
 
-function todayStr() {
-  return new Date().toISOString().split("T")[0];
-}
+import { todayStr } from "@/lib/dates";
 
 // Compute once at module load to prevent HMR re-evaluation triggering re-renders
 const TODAY = todayStr();

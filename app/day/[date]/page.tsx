@@ -3,6 +3,7 @@
 import { usePlanner } from "@/context/PlannerContext";
 import Link from "next/link";
 import { use } from "react";
+import { todayStr, toDateStr } from "@/lib/dates";
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr + "T12:00:00");
@@ -12,7 +13,7 @@ function formatDate(dateStr: string) {
 function shiftDate(dateStr: string, days: number) {
   const d = new Date(dateStr + "T12:00:00");
   d.setDate(d.getDate() + days);
-  return d.toISOString().split("T")[0];
+  return toDateStr(d);
 }
 
 export default function DayPage({ params }: { params: Promise<{ date: string }> }) {
@@ -28,7 +29,7 @@ export default function DayPage({ params }: { params: Promise<{ date: string }> 
 
   const prev = shiftDate(date, -1);
   const next = shiftDate(date, 1);
-  const isToday = date === new Date().toISOString().split("T")[0];
+  const isToday = date === todayStr();
   const doneTasks = dayTasks.filter((t) => t.done).length;
 
   return (

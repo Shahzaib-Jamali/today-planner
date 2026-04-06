@@ -3,10 +3,7 @@
 import { usePlanner } from "@/context/PlannerContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, Suspense } from "react";
-
-function todayStr() {
-  return new Date().toISOString().split("T")[0];
-}
+import { todayStr } from "@/lib/dates";
 
 export default function NewPage() {
   return (

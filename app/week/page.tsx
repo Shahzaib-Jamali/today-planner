@@ -2,6 +2,7 @@
 
 import { usePlanner } from "@/context/PlannerContext";
 import Link from "next/link";
+import { todayStr, toDateStr } from "@/lib/dates";
 
 function getWeekDates(): string[] {
   const now = new Date();
@@ -12,7 +13,7 @@ function getWeekDates(): string[] {
   for (let i = 0; i < 7; i++) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    dates.push(d.toISOString().split("T")[0]);
+    dates.push(toDateStr(d));
   }
   return dates;
 }
@@ -32,7 +33,7 @@ function formatMonth(dateStr: string) {
 export default function WeekPage() {
   const { tasks, timeBlocks } = usePlanner();
   const weekDates = getWeekDates();
-  const today = new Date().toISOString().split("T")[0];
+  const today = todayStr();
 
   return (
     <div className="flex flex-col">

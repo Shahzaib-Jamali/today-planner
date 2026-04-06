@@ -5,10 +5,7 @@ import Link from "next/link";
 import { useState, useMemo } from "react";
 import { parseNaturalInput } from "@/lib/parseNaturalInput";
 import { getQuoteOfTheDay } from "@/lib/quotes";
-
-function todayStr() {
-  return new Date().toISOString().split("T")[0];
-}
+import { todayStr, toDateStr } from "@/lib/dates";
 
 function getWeekDates(): string[] {
   const now = new Date();
@@ -19,7 +16,7 @@ function getWeekDates(): string[] {
   for (let i = 0; i < 7; i++) {
     const d = new Date(monday);
     d.setDate(monday.getDate() + i);
-    dates.push(d.toISOString().split("T")[0]);
+    dates.push(toDateStr(d));
   }
   return dates;
 }
@@ -404,8 +401,8 @@ function QuickAdd({ selectedDate }: { selectedDate: string }) {
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
-    if (dateStr === today.toISOString().split("T")[0]) return "Today";
-    if (dateStr === tomorrow.toISOString().split("T")[0]) return "Tomorrow";
+    if (dateStr === toDateStr(today)) return "Today";
+    if (dateStr === toDateStr(tomorrow)) return "Tomorrow";
     return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
   }
 
