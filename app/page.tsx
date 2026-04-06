@@ -2,7 +2,8 @@
 
 import { usePlanner } from "@/context/PlannerContext";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { parseNaturalInput } from "@/lib/parseNaturalInput";
 
 function todayStr() {
   return new Date().toISOString().split("T")[0];
@@ -323,38 +324,80 @@ export default function HomePage() {
 }
 
 function QuickAdd({ selectedDate }: { selectedDate: string }) {
-  const { addTask } = usePlanner();
+  const { addTask, addTimeBlock } = usePlanner();
   const [value, setValue] = useState("");
+
+  const parsed = useMemo(
+    () => (value.trim() ? parseNaturalInput(value, selectedDate) : null),
+    [value, selectedDate]
+  );
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!value.trim()) return;
-    addTask(selectedDate, value.trim());
+    if (!value.trim() || !parsed) return;
+
+    if (parsed.type === "timeblock" && parsed.time) {
+      addTimeBlock(parsed.date, parsed.time, parsed.title);
+    } else {
+      addTask(parsed.date, parsed.title);
+    }
     setValue("");
   }
 
+  function formatPreviewDate(dateStr: string) {
+    const d = new Date(dateStr + "T12:00:00");
+    const today = new Date();
+    today.setHours(12, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (dateStr === today.toISOString().split("T")[0]) return "Today";
+    if (dateStr === tomorrow.toISOString().split("T")[0]) return "Tomorrow";
+    return d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+  }
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="sticky bottom-0 flex gap-1.5 px-4 py-2"
-      style={{ background: "var(--bg)", borderTop: "2px solid var(--border-heavy)" }}
-    >
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Quick add task..."
-        className="flex-1 px-3.5 py-2.5 text-[13px] outline-none transition-colors"
-        style={{ background: "var(--surface)", border: "1.5px solid var(--border)", color: "var(--text)" }}
-      />
-      <button
-        type="submit"
-        className="px-4 py-2.5 text-[13px] font-bold tracking-[2px] cursor-pointer transition-colors"
-        style={{ background: "var(--red)", color: "#fff", border: "none" }}
+    <div className="sticky bottom-0" style={{ background: "var(--bg)", borderTop: "2px solid var(--border-heavy)" }}>
+      {/* Smart preview */}
+      {parsed && value.trim() && (
+        <div className="px-4 py-1.5 flex items-center gap-2 text-[10px]" style={{ background: "var(--subtle)", borderBottom: "1px solid var(--border)" }}>
+          <span style={{ color: "var(--muted)" }}>
+            {parsed.type === "timeblock" ? "Schedule" : "Task"}:
+          </span>
+          <span className="font-semibold" style={{ color: "var(--text)" }}>
+            {parsed.title || "..."}
+          </span>
+          {parsed.time && (
+            <span className="font-bold" style={{ color: "var(--red)" }}>
+              {parsed.time}
+            </span>
+          )}
+          <span style={{ color: "var(--blue)" }}>
+            {formatPreviewDate(parsed.date)}
+          </span>
+        </div>
+      )}
+      <form
+        onSubmit={handleSubmit}
+        className="flex gap-1.5 px-4 py-2"
       >
-        ADD
-      </button>
-    </form>
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder='Try "meeting at 5pm tomorrow" or "gym on friday"...'
+          className="flex-1 px-3.5 py-2.5 text-[13px] outline-none transition-colors"
+          style={{ background: "var(--surface)", border: "1.5px solid var(--border)", color: "var(--text)" }}
+        />
+        <button
+          type="submit"
+          className="px-4 py-2.5 text-[13px] font-bold tracking-[2px] cursor-pointer transition-colors"
+          style={{ background: "var(--red)", color: "#fff", border: "none" }}
+        >
+          ADD
+        </button>
+      </form>
+    </div>
   );
 }
 
