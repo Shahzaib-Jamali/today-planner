@@ -61,6 +61,11 @@ type PlannerState = {
   toggleReadingStatus: (id: string) => void;
   addVocab: (word: string, definition: string, example?: string, course?: string) => void;
   updateVocabMastery: (id: string, mastery: Mastery) => void;
+  deleteTask: (id: string) => void;
+  deleteNote: (id: string) => void;
+  deleteTimeBlock: (id: string) => void;
+  deleteReading: (id: string) => void;
+  deleteVocab: (id: string) => void;
 };
 
 const PlannerContext = createContext<PlannerState | null>(null);
@@ -145,6 +150,12 @@ export function PlannerProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const deleteTask = (id: string) => setTasks((prev) => prev.filter((t) => t.id !== id));
+  const deleteNote = (id: string) => setNotes((prev) => prev.filter((n) => n.id !== id));
+  const deleteTimeBlock = (id: string) => setTimeBlocks((prev) => prev.filter((b) => b.id !== id));
+  const deleteReading = (id: string) => setReadings((prev) => prev.filter((r) => r.id !== id));
+  const deleteVocab = (id: string) => setVocab((prev) => prev.filter((v) => v.id !== id));
+
   const addVocab = (word: string, definition: string, example?: string, course?: string) => {
     setVocab((prev) => [...prev, { id: generateId(), word, definition, example, course, mastery: "new", dateAdded: todayStr() }]);
   };
@@ -157,7 +168,7 @@ export function PlannerProvider({ children }: { children: ReactNode }) {
 
   return (
     <PlannerContext.Provider
-      value={{ tasks, notes, timeBlocks, readings, vocab, addTask, toggleTask, addNote, addTimeBlock, addReading, toggleReadingStatus, addVocab, updateVocabMastery }}
+      value={{ tasks, notes, timeBlocks, readings, vocab, addTask, toggleTask, addNote, addTimeBlock, addReading, toggleReadingStatus, addVocab, updateVocabMastery, deleteTask, deleteNote, deleteTimeBlock, deleteReading, deleteVocab }}
     >
       {children}
     </PlannerContext.Provider>

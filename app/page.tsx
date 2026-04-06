@@ -37,7 +37,7 @@ function formatDateLong(dateStr: string) {
 }
 
 export default function HomePage() {
-  const { tasks, notes, timeBlocks, readings, vocab, toggleTask, toggleReadingStatus } = usePlanner();
+  const { tasks, notes, timeBlocks, readings, vocab, toggleTask, toggleReadingStatus, deleteTask, deleteTimeBlock, deleteReading, deleteNote } = usePlanner();
   const today = todayStr();
   const weekDates = getWeekDates();
   const [selectedDate, setSelectedDate] = useState(today);
@@ -163,7 +163,7 @@ export default function HomePage() {
             dayTasks.map((task) => (
               <label
                 key={task.id}
-                className="flex items-center gap-2.5 py-1.5 cursor-pointer"
+                className="group flex items-center gap-2.5 py-1.5 cursor-pointer"
                 style={{ borderBottom: "1px solid var(--subtle)" }}
               >
                 <input
@@ -201,6 +201,14 @@ export default function HomePage() {
                     {task.dueDate}
                   </span>
                 )}
+                <button
+                  onClick={(e) => { e.preventDefault(); deleteTask(task.id); }}
+                  className="text-[11px] flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  style={{ color: "var(--faint)" }}
+                  aria-label="Delete task"
+                >
+                  ×
+                </button>
               </label>
             ))
           )}
@@ -217,19 +225,27 @@ export default function HomePage() {
             dayBlocks.map((block, i) => (
               <div
                 key={block.id}
-                className={`flex gap-2.5 py-1.5 ${i === 0 ? "px-3 -mx-3" : ""}`}
+                className={`group flex gap-2.5 py-1.5 ${i === 0 ? "px-3 -mx-3" : ""}`}
                 style={{
                   borderBottom: "1px solid var(--subtle)",
                   ...(i === 0 ? { background: "var(--subtle)", borderLeft: "2px solid var(--red)" } : {}),
                 }}
               >
                 <span className="text-[11px] font-bold min-w-[42px]" style={{ color: "var(--red)" }}>{block.time}</span>
-                <div>
+                <div className="flex-1">
                   <span className="text-[13px] font-medium block" style={{ color: "var(--text)" }}>{block.title}</span>
                   {block.location && (
                     <span className="text-[10px]" style={{ color: "var(--faint)" }}>{block.location}</span>
                   )}
                 </div>
+                <button
+                  onClick={() => deleteTimeBlock(block.id)}
+                  className="text-[11px] flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  style={{ color: "var(--faint)" }}
+                  aria-label="Delete schedule item"
+                >
+                  ×
+                </button>
               </div>
             ))
           )}
@@ -249,7 +265,7 @@ export default function HomePage() {
             dayReadings.map((r) => (
               <div
                 key={r.id}
-                className="flex items-center justify-between gap-2 py-1.5 cursor-pointer"
+                className="group flex items-center justify-between gap-2 py-1.5 cursor-pointer"
                 style={{ borderBottom: "1px solid var(--subtle)" }}
                 onClick={() => toggleReadingStatus(r.id)}
               >
@@ -267,6 +283,14 @@ export default function HomePage() {
                 >
                   {r.status || "TODO"}
                 </span>
+                <button
+                  onClick={(e) => { e.stopPropagation(); deleteReading(r.id); }}
+                  className="text-[11px] flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  style={{ color: "var(--faint)" }}
+                  aria-label="Delete reading"
+                >
+                  ×
+                </button>
               </div>
             ))
           )}
@@ -283,10 +307,18 @@ export default function HomePage() {
             dayNotes.map((note) => (
               <div
                 key={note.id}
-                className="text-xs leading-relaxed px-3 py-2"
+                className="group flex items-start gap-2 text-xs leading-relaxed px-3 py-2"
                 style={{ color: "var(--muted)", borderLeft: "2px solid var(--yellow)", background: "var(--yellow-bg)" }}
               >
-                {note.text}
+                <span className="flex-1">{note.text}</span>
+                <button
+                  onClick={() => deleteNote(note.id)}
+                  className="text-[11px] flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  style={{ color: "var(--faint)" }}
+                  aria-label="Delete note"
+                >
+                  ×
+                </button>
               </div>
             ))
           )}
